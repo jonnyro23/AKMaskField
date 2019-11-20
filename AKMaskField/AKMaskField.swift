@@ -378,7 +378,7 @@ open class AKMaskField: UITextField, UITextFieldDelegate  {
         switch maskStatus {
         case .clear       : position = maskBlocks.first!.templateRange.location
         case .incomplete  : position = maskBlocks.flatMap { $0.chars.filter { $0.status == .clear } }.first!.templateRange.location
-        case .complete    : position = maskBlocks.last!.templateRange.toRange()!.upperBound
+        case .complete    : position = Range(maskBlocks.last?.templateRange ?? NSRange(location: 0, length: 0))?.upperBound ?? 0
         }
         
         AKMaskFieldUtility.maskField(self, moveCaretToPosition: position)
@@ -587,7 +587,7 @@ open class AKMaskField: UITextField, UITextFieldDelegate  {
                         
                         
                         // New carret position
-                        location = maskTextRange.toRange()!.upperBound
+                        location = Range(maskTextRange)?.upperBound ?? 0
                         
                         event = .insert
                         
@@ -695,9 +695,9 @@ open class AKMaskField: UITextField, UITextFieldDelegate  {
                 print("   index           : \(char.index)")
                 print("   blockIndex      : \(char.blockIndex)")
                 print("   status          : \(char.status)")
-                print("   pattern         : \(String(describing: char.pattern))")
+                print("   pattern         : \(char.pattern ?? AKMaskFieldPatternCharacter.AnyChar)")
                 print("   patternRange    : \(char.patternRange)")
-                print("   template        : \(String(describing: char.template))")
+                print("   template        : \(char.template ?? Character(""))") 
                 print("   templateRange   : \(char.templateRange)")
             }
             print("")
